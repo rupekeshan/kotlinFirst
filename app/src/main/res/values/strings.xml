@@ -1,0 +1,10 @@
+<resources>
+    <string name="app_name">first Kotlin</string>
+    <string name="hello_blank_fragment">Hello blank fragment</string>
+    <string name="detail">detail</string>
+    <string name="notes">Notes</string>
+    <string name="welcome_to_notes">Welcome to Notes</string>
+    <string name="start">Start</string>
+    <string name="action_settings">Exit</string>
+    <string name="action_favorite">Add</string>
+</resources>
