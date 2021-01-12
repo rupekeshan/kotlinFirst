@@ -3,46 +3,47 @@
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
-    android:layout_height="match_parent"
+    android:layout_height="wrap_content"
     android:padding="20dp">
 
     <EditText
         android:id="@+id/textHeader"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:layout_marginTop="124dp"
+        android:layout_marginTop="32dp"
+        android:autofillHints="Header"
         android:ems="10"
+        android:hint="Title"
         android:inputType="text"
         app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintHorizontal_bias="0.4"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent"
-        android:autofillHints="Header"
-        android:hint="Title"
         tools:ignore="LabelFor" />
 
     <EditText
         android:id="@+id/textDescription"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:layout_marginTop="56dp"
+        android:layout_marginTop="24dp"
+        android:autofillHints="Desc"
         android:ems="10"
+        android:hint="Description"
         android:inputType="text"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
-        android:hint="Description"
         app:layout_constraintTop_toBottomOf="@+id/textHeader"
-        android:autofillHints="Desc"
         tools:ignore="LabelFor" />
 
     <Button
-        android:id="@+id/addTodoButton"
+        android:id="@+id/saveButton"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_marginTop="88dp"
+        android:layout_marginTop="32dp"
+        android:background="@drawable/custom_button"
         android:text="Save"
-        android:textColor="#fff"
+        android:textColor="#000"
         app:layout_constraintEnd_toEndOf="parent"
-        android:background="#1E88E5"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toBottomOf="@+id/textDescription" />
 </androidx.constraintlayout.widget.ConstraintLayout>

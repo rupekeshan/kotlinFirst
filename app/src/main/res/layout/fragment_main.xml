@@ -35,7 +35,7 @@
         android:layout_height="wrap_content"
         android:layout_marginStart="16dp"
         android:layout_marginTop="24dp"
-        android:background="#FBC02D"
+        android:background="@drawable/custom_button"
         android:elevation="8dp"
         android:text="@string/start"
         app:layout_constraintEnd_toEndOf="parent"

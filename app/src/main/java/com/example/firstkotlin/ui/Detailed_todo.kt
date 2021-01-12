@@ -5,6 +5,7 @@ import androidx.fragment.app.Fragment
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import android.widget.Toast
 import androidx.fragment.app.viewModels
 import androidx.lifecycle.Observer
 import com.example.firstkotlin.R
@@ -27,13 +28,21 @@ class Detailed_todo : Fragment() {
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         val id = arguments?.getInt("id")
-        context?.let {
-            todoViewModel.getallDetail(it).observe(viewLifecycleOwner, Observer {
+        context?.let { context ->
+            todoViewModel.getallDetail(context).observe(viewLifecycleOwner, Observer {
                 sampleData = it
+                if (id != null) {
+                    updateData(id)
+                }
+                else{
+                    Toast.makeText(context,"Something Wrong",Toast.LENGTH_SHORT).show()
+                }
             })
         }
+    }
 
-        val getClass = id?.let {
+    private fun updateData(id:Int) {
+        val getClass = id.let {
             sampleData?.find {
                 it.id == id
             }
@@ -41,5 +50,4 @@ class Detailed_todo : Fragment() {
         header_detail.text = getClass?.header
         desc_detail.text = getClass?.body
     }
-
 }

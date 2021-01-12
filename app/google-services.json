@@ -1,0 +1,40 @@
+{
+  "project_info": {
+    "project_number": "276106831",
+    "firebase_url": "https://poweramp-a1889.firebaseio.com",
+    "project_id": "poweramp-a1889",
+    "storage_bucket": "poweramp-a1889.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:276106831:android:189e7f43531ec43ab5643a",
+        "android_client_info": {
+          "package_name": "com.example.firstkotlin"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "276106831-mnetk8hs9sgjo1vi0irs80qb7560s17j.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyDnnu4hoj5HQ0MzC3_H_6D4GP1dsc6thTY"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": [
+            {
+              "client_id": "276106831-mnetk8hs9sgjo1vi0irs80qb7560s17j.apps.googleusercontent.com",
+              "client_type": 3
+            }
+          ]
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}

@@ -35,7 +35,6 @@ class ListFragment : Fragment() {
         context?.let {
             todoViewModel.getallDetail(it).observe(viewLifecycleOwner, Observer {
                 it?.let {
-                    Log.e(TAG, "onCreateView: working ${it.toString()}" )
                     recycleAdap.initializeList(it)
                 }
             })

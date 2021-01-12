@@ -16,6 +16,10 @@ class TodoViewModel() : ViewModel() {
         TodoRepo.insert(context, todo)
     }
 
+    fun deleteData(context: Context,todo:Todo){
+        TodoRepo.deleteData(todo,context)
+    }
+
 
 }
 //

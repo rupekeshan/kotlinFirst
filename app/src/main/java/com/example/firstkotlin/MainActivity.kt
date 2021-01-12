@@ -1,6 +1,7 @@
 package com.example.firstkotlin
 
 import android.app.Activity
+import android.app.Dialog
 import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
 import android.util.Log
@@ -14,6 +15,7 @@ import androidx.navigation.Navigation
 import androidx.navigation.findNavController
 import androidx.navigation.fragment.NavHostFragment
 import androidx.navigation.ui.*
+import com.example.firstkotlin.ui.Add_todo
 import kotlinx.android.synthetic.main.activity_main.*
 
 class MainActivity : AppCompatActivity() {
@@ -34,6 +36,13 @@ class MainActivity : AppCompatActivity() {
 //        toolBar.setupWithNavController(navController)
 //        setupActionBarWithNavController(navController)
 
+        addFAB.setOnClickListener {
+//            Navigation.findNavController(this,R.id.navHost_fragment).navigate(R.id.add_todo)
+
+            val dialog: Add_todo = Add_todo()
+            dialog.show(supportFragmentManager, "show")
+        }
+
     }
 
     override fun onCreateOptionsMenu(menu: Menu?): Boolean {
@@ -43,23 +52,19 @@ class MainActivity : AppCompatActivity() {
     }
 
     override fun onBackPressed() {
-        Log.d(TAG, "onBackPressed: ${supportFragmentManager.backStackEntryCount}")
+        Log.e(TAG, "onBackPressed: ${supportFragmentManager.backStackEntryCount}")
         super.onBackPressed()
     }
 
-//    override fun onOptionsItemSelected(item: MenuItem): Boolean {
-//        return item.onNavDestinationSelected(findNavController(R.id.navHost_fragment)) || super.onOptionsItemSelected(item)
-//    }
 
     override fun onOptionsItemSelected(item: MenuItem): Boolean {
-        when(item.itemId){
-            R.id.add_todo->{
-                Navigation.findNavController(this,R.id.navHost_fragment).navigate(R.id.add_todo)
-            }
-        }
+//        when (item.itemId) {
+//            R.id.add_todo -> {
+////                Navigation.findNavController(this,R.id.navHost_fragment).navigate(R.id.add_todo)
+//            }
+//        }
         return super.onOptionsItemSelected(item)
     }
-
 
 
 }

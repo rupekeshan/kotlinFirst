@@ -7,7 +7,7 @@ import androidx.room.RoomDatabase
 import com.example.firstkotlin.data.dao.TodoDao
 import com.example.firstkotlin.data.entity.Todo
 
-@Database(entities = arrayOf(Todo::class), version = 1)
+@Database(entities = [Todo::class], version = 1)
 abstract class RoomDB : RoomDatabase() {
 
 

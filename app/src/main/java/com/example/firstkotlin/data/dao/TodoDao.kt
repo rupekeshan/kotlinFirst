@@ -1,9 +1,6 @@
 package com.example.firstkotlin.data.dao
 
-import androidx.room.Dao
-import androidx.room.Insert
-import androidx.room.OnConflictStrategy
-import androidx.room.Query
+import androidx.room.*
 import com.example.firstkotlin.data.entity.Todo
 import kotlinx.coroutines.flow.Flow
 
@@ -15,5 +12,8 @@ interface TodoDao {
 
     @Insert(onConflict = OnConflictStrategy.IGNORE)
     suspend fun addData(todo:Todo)
+
+    @Delete
+    suspend fun deleteData(todo:Todo)
 
 }

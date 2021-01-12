@@ -30,7 +30,6 @@ class MainFragment : Fragment() {
         navController = Navigation.findNavController(view)
         button = startButton
         button.setOnClickListener {
-            Log.d(TAG, "onViewCreated: view $view")
             navController.navigate(R.id.action_mainFragment_to_listFragment)
         }
         setHasOptionsMenu(true)

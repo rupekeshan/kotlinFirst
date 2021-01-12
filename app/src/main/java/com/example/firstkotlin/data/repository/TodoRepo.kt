@@ -33,6 +33,13 @@ class TodoRepo(private val todoDao: TodoDao) {
             roomDB= initDb(context)
             return roomDB!!.todoDao().getAllData().asLiveData()
         }
+
+        fun deleteData(todo:Todo,context:Context){
+            roomDB = initDb(context = context)
+            CoroutineScope(Dispatchers.IO).launch {
+                roomDB!!.todoDao().deleteData(todo)
+            }
+        }
     }
 
 }
