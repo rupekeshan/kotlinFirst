@@ -1,36 +1,34 @@
 package com.example.firstkotlin.viewModel
 
-import android.content.Context
-import androidx.lifecycle.*
-import com.example.firstkotlin.data.entity.Todo
+import androidx.lifecycle.LiveData
+import androidx.lifecycle.MutableLiveData
+import androidx.lifecycle.ViewModel
+import androidx.lifecycle.viewModelScope
+import com.example.firstkotlin.data.db.entity.Todo
 import com.example.firstkotlin.data.repository.TodoRepo
 import kotlinx.coroutines.launch
 
-class TodoViewModel() : ViewModel() {
-    val todoList: LiveData<List<Todo>>? = null
-    fun getallDetail(context: Context): LiveData<List<Todo>> {
-        return TodoRepo.getallDetail(context)
+class TodoViewModel(val todoRepo: TodoRepo) : ViewModel() {
+
+    private val _todoMutableList = MutableLiveData<List<Todo>>()
+
+
+    val todoList: LiveData<List<Todo>>
+        get() = _todoMutableList
+
+
+    fun getallDetail(): LiveData<List<Todo>> {
+        return todoRepo.getallDetail()
     }
 
-    fun addTodo(context: Context, todo: Todo) {
-        TodoRepo.insert(context, todo)
+    fun addTodo(todo: Todo) = viewModelScope.launch {
+        todoRepo.insert(todo)
     }
 
-    fun deleteData(context: Context,todo:Todo){
-        TodoRepo.deleteData(todo,context)
+
+    fun deleteData(todo: Todo) = viewModelScope.launch {
+        todoRepo.deleteData(todo)
     }
 
 
 }
-//
-//class TodoVMFactory() : ViewModelProvider.Factory {
-//    private val todoRepo: TodoRepo=TodoApplication().repository
-//    override fun <T : ViewModel?> create(modelClass: Class<T>): T {
-//
-//        if (modelClass.isAssignableFrom(TodoViewModel::class.java)) {
-//            @Suppress("UNCHECKED_CAST")
-//            return TodoViewModel(todoRepo) as T
-//        }
-//        throw IllegalArgumentException("Unknown ViewModel class")
-//    }
-//}

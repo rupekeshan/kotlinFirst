@@ -1,45 +1,56 @@
 package com.example.firstkotlin.data.repository
 
 import android.content.Context
-import androidx.annotation.WorkerThread
+import android.net.ConnectivityManager
+import android.net.Network
+import android.net.NetworkCapabilities
+import android.util.Log
 import androidx.lifecycle.LiveData
-import androidx.lifecycle.asLiveData
-import com.example.firstkotlin.data.RoomDB
-import com.example.firstkotlin.data.dao.TodoDao
-import com.example.firstkotlin.data.entity.Todo
-import kotlinx.coroutines.CoroutineScope
-import kotlinx.coroutines.Dispatchers
-import kotlinx.coroutines.flow.Flow
-import kotlinx.coroutines.launch
+import com.example.firstkotlin.data.db.RoomDB
+import com.example.firstkotlin.data.db.entity.Todo
+import com.example.firstkotlin.data.firebase.TodoFireBase
 
-class TodoRepo(private val todoDao: TodoDao) {
-    companion object{
-        var roomDB:RoomDB?=null
 
-        fun initDb(context: Context):RoomDB{
-            return RoomDB.getDb(context)
+class TodoRepo(val db: RoomDB,val context: Context) {
 
+    private val todoFireBase: TodoFireBase = TodoFireBase()
+
+    suspend fun insert(todo: Todo) {
+//        syncWithCloud(db.todoDao().getAllData())
+        db.todoDao().addData(todo)
+    }
+
+    fun getallDetail(): LiveData<List<Todo>> {
+//        syncWithCloud(db.todoDao().getAllData())
+        return db.todoDao().getAllDataWithLive()
+    }
+
+    private fun syncWithCloud(todoDBList: List<Todo>) {
+        if(isNetworkAvailable()){
+            todoFireBase.sync(todoDBList)
         }
+    }
 
-        fun insert(context:Context,todo: Todo){
-            roomDB= initDb(context)
-            CoroutineScope(Dispatchers.IO).launch {
-                roomDB!!.todoDao().addData(todo)
+    suspend fun deleteData(todo: Todo) {
+//        syncWithCloud(db.todoDao().g etAllData())
+        db.todoDao().deleteData(todo)
+    }
+
+    private fun isNetworkAvailable(): Boolean {
+        val cm =
+            context.getSystemService(Context.CONNECTIVITY_SERVICE) as ConnectivityManager
+
+        val networks: Array<Network> = cm.allNetworks
+        var hasInternet = false
+        if (networks.isNotEmpty()) {
+            for (network in networks) {
+                val nc = cm.getNetworkCapabilities(network)
+                if (nc!!.hasCapability(NetworkCapabilities.NET_CAPABILITY_INTERNET)) hasInternet =
+                    true
             }
-
         }
-
-        fun getallDetail(context: Context): LiveData<List<Todo>> {
-            roomDB= initDb(context)
-            return roomDB!!.todoDao().getAllData().asLiveData()
-        }
-
-        fun deleteData(todo:Todo,context:Context){
-            roomDB = initDb(context = context)
-            CoroutineScope(Dispatchers.IO).launch {
-                roomDB!!.todoDao().deleteData(todo)
-            }
-        }
+        Log.d("TAG", "isNetworkAvailable: ${hasInternet}")
+        return hasInternet
     }
 
 }

@@ -3,10 +3,14 @@ apply plugin: 'kotlin-android'
 apply plugin: 'kotlin-android-extensions'
 apply plugin: 'kotlin-kapt'
 apply plugin: 'com.google.gms.google-services'
+apply plugin: 'dagger.hilt.android.plugin'
 
 android {
     compileSdkVersion 29
     buildToolsVersion "29.0.3"
+    dataBinding{
+        enabled=true
+    }
 
     packagingOptions {
         exclude 'META-INF/atomicfu.kotlin_module'
@@ -92,6 +96,19 @@ dependencies {
     //firebase
     implementation platform('com.google.firebase:firebase-bom:26.2.0')
     implementation 'com.google.firebase:firebase-analytics-ktx'
+
+    //cloudstore
+    implementation 'com.google.firebase:firebase-firestore-ktx'
+
+//    //dagger
+//    def dagger_version = "2.28.3"
+//    implementation "com.google.dagger:dagger:$dagger_version"
+//    kapt "com.google.dagger:dagger-compiler:$dagger_version"
+
+    //hilt
+    def hilt_version = '2.28.3-alpha'
+    implementation "com.google.dagger:hilt-android:$hilt_version"
+    kapt "com.google.dagger:hilt-android-compiler:$hilt_version"
 
 
 }

@@ -3,7 +3,6 @@ package com.example.firstkotlin.ui
 import android.app.Activity
 import android.content.Context
 import android.os.Bundle
-import androidx.fragment.app.Fragment
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
@@ -13,12 +12,15 @@ import android.widget.EditText
 import android.widget.Toast
 import androidx.activity.OnBackPressedCallback
 import androidx.fragment.app.DialogFragment
-import androidx.fragment.app.viewModels
+import androidx.fragment.app.Fragment
+import androidx.lifecycle.ViewModelProvider
 import androidx.navigation.Navigation
 import com.example.firstkotlin.R
-import com.example.firstkotlin.data.entity.Todo
+import com.example.firstkotlin.data.db.RoomDB
+import com.example.firstkotlin.data.db.entity.Todo
+import com.example.firstkotlin.data.repository.TodoRepo
 import com.example.firstkotlin.viewModel.TodoViewModel
-import kotlinx.android.synthetic.main.activity_main.*
+import com.example.firstkotlin.viewModel.vmfactory.TodoVMFactory
 import kotlinx.android.synthetic.main.add_todo_fragment.*
 
 
@@ -26,7 +28,7 @@ class Add_todo : DialogFragment() {
 
     private lateinit var text_header: EditText;
     private lateinit var text_desc: EditText;
-    private val todoViewModel: TodoViewModel by viewModels()
+    private lateinit var todoViewModel: TodoViewModel
 
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?,
@@ -36,6 +38,15 @@ class Add_todo : DialogFragment() {
     }
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
+        todoViewModel = ViewModelProvider(
+            this,
+            TodoVMFactory(TodoRepo(
+                RoomDB(
+                    requireContext()
+                ),requireContext()
+            ))
+        ).get(TodoViewModel::class.java)
+
         text_header = textHeader
         text_desc = textDescription
         saveButton.setOnClickListener {
@@ -74,7 +85,7 @@ class Add_todo : DialogFragment() {
 
     fun submitData() {
         val todo = Todo(text_header.text.toString(), text_desc.text.toString())
-        context?.let { it1 -> todoViewModel.addTodo(it1, todo) }
+        context?.let { it1 -> todoViewModel.addTodo(todo) }
         dialog?.dismiss()
     }
 
