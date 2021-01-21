@@ -9,9 +9,10 @@ import androidx.lifecycle.LiveData
 import com.example.firstkotlin.data.db.RoomDB
 import com.example.firstkotlin.data.db.entity.Todo
 import com.example.firstkotlin.data.firebase.TodoFireBase
+import javax.inject.Inject
 
 
-class TodoRepo(val db: RoomDB,val context: Context) {
+class TodoRepo @Inject constructor(val db: RoomDB, val context: Context) {
 
     private val todoFireBase: TodoFireBase = TodoFireBase()
 
@@ -26,7 +27,7 @@ class TodoRepo(val db: RoomDB,val context: Context) {
     }
 
     private fun syncWithCloud(todoDBList: List<Todo>) {
-        if(isNetworkAvailable()){
+        if (isNetworkAvailable()) {
             todoFireBase.sync(todoDBList)
         }
     }

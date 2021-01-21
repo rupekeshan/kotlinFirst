@@ -7,8 +7,9 @@ import androidx.lifecycle.viewModelScope
 import com.example.firstkotlin.data.db.entity.Todo
 import com.example.firstkotlin.data.repository.TodoRepo
 import kotlinx.coroutines.launch
+import javax.inject.Inject
 
-class TodoViewModel(val todoRepo: TodoRepo) : ViewModel() {
+class TodoViewModel @Inject constructor(val todoRepo: TodoRepo) : ViewModel() {
 
     private val _todoMutableList = MutableLiveData<List<Todo>>()
 

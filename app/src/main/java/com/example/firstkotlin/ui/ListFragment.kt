@@ -16,12 +16,13 @@ import com.example.firstkotlin.viewModel.TodoViewModel
 import com.example.firstkotlin.viewModel.vmfactory.TodoVMFactory
 import dagger.hilt.android.AndroidEntryPoint
 import kotlinx.android.synthetic.main.fragment_list.*
+import javax.inject.Inject
 
 @AndroidEntryPoint
 class ListFragment : Fragment() {
 
-    private lateinit var recycleAdap: TodoRecycleAdapter
-    private lateinit var todoViewModel: TodoViewModel
+    @Inject lateinit var recycleAdap: TodoRecycleAdapter
+    @Inject lateinit var todoViewModel: TodoViewModel
 
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?,

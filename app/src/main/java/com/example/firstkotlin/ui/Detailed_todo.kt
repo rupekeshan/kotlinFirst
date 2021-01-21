@@ -15,11 +15,12 @@ import com.example.firstkotlin.data.repository.TodoRepo
 import com.example.firstkotlin.viewModel.TodoViewModel
 import com.example.firstkotlin.viewModel.vmfactory.TodoVMFactory
 import kotlinx.android.synthetic.main.fragment_detailed_todo.*
+import javax.inject.Inject
 
 
 class Detailed_todo : Fragment() {
 
-    private lateinit var todoViewModel: TodoViewModel
+    @Inject lateinit var todoViewModel: TodoViewModel
     private var sampleData: List<Todo>? = null
 
     override fun onCreateView(

@@ -22,13 +22,14 @@ import com.example.firstkotlin.data.repository.TodoRepo
 import com.example.firstkotlin.viewModel.TodoViewModel
 import com.example.firstkotlin.viewModel.vmfactory.TodoVMFactory
 import kotlinx.android.synthetic.main.add_todo_fragment.*
+import javax.inject.Inject
 
 
 class Add_todo : DialogFragment() {
 
     private lateinit var text_header: EditText;
     private lateinit var text_desc: EditText;
-    private lateinit var todoViewModel: TodoViewModel
+    @Inject lateinit var todoViewModel: TodoViewModel
 
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?,
