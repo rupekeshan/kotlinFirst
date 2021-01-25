@@ -5,36 +5,46 @@ import android.net.ConnectivityManager
 import android.net.Network
 import android.net.NetworkCapabilities
 import android.util.Log
-import androidx.lifecycle.LiveData
-import com.example.firstkotlin.data.db.RoomDB
-import com.example.firstkotlin.data.db.entity.Todo
-import com.example.firstkotlin.data.firebase.TodoFireBase
+import com.example.firstkotlin.data.db.TodoDB
+import com.example.firstkotlin.data.db.entity.CacheMapper
+import com.example.firstkotlin.data.db.entity.TodoEntityForCache
+import com.example.firstkotlin.data.firebase.FirebaseTodoOperation
+import com.example.firstkotlin.data.firebase.entity.NetworkEntityMapper
+import com.example.firstkotlin.model.Todo
+import dagger.hilt.android.qualifiers.ApplicationContext
 import javax.inject.Inject
 
 
-class TodoRepo @Inject constructor(val db: RoomDB, val context: Context) {
-
-    private val todoFireBase: TodoFireBase = TodoFireBase()
+class TodoRepo @Inject constructor(
+    @ApplicationContext val context: Context,
+    val db: TodoDB,
+    private val firebaseTodoOperation: FirebaseTodoOperation,
+    val cacheMapper: CacheMapper,
+    val networkEntityMapper: NetworkEntityMapper
+) {
 
     suspend fun insert(todo: Todo) {
 //        syncWithCloud(db.todoDao().getAllData())
-        db.todoDao().addData(todo)
+
+        val todoEntityForCache = cacheMapper.mapToEntity(todo)
+        db.todoDao().addData(todoEntityForCache)
     }
 
-    fun getallDetail(): LiveData<List<Todo>> {
+    fun getallDetail(): List<Todo> {
 //        syncWithCloud(db.todoDao().getAllData())
-        return db.todoDao().getAllDataWithLive()
+        return cacheMapper.mapFromListEntity(db.todoDao().getAllData())
     }
 
-    private fun syncWithCloud(todoDBList: List<Todo>) {
+    private fun syncWithCloud(todoEntityForDBDBList: List<TodoEntityForCache>) {
         if (isNetworkAvailable()) {
-            todoFireBase.sync(todoDBList)
+            firebaseTodoOperation.sync(todoEntityForDBDBList)
         }
     }
 
     suspend fun deleteData(todo: Todo) {
 //        syncWithCloud(db.todoDao().g etAllData())
-        db.todoDao().deleteData(todo)
+        val todoEntityForCache = cacheMapper.mapToEntity(todo)
+        db.todoDao().deleteData(todoEntityForCache)
     }
 
     private fun isNetworkAvailable(): Boolean {
@@ -50,7 +60,7 @@ class TodoRepo @Inject constructor(val db: RoomDB, val context: Context) {
                     true
             }
         }
-        Log.d("TAG", "isNetworkAvailable: ${hasInternet}")
+        Log.d("TAG", "isNetworkAvailable: $hasInternet")
         return hasInternet
     }
 

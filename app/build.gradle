@@ -8,9 +8,7 @@ apply plugin: 'dagger.hilt.android.plugin'
 android {
     compileSdkVersion 29
     buildToolsVersion "29.0.3"
-    dataBinding{
-        enabled=true
-    }
+
 
     packagingOptions {
         exclude 'META-INF/atomicfu.kotlin_module'
@@ -109,6 +107,9 @@ dependencies {
     def hilt_version = '2.28.3-alpha'
     implementation "com.google.dagger:hilt-android:$hilt_version"
     kapt "com.google.dagger:hilt-android-compiler:$hilt_version"
+
+    implementation 'androidx.hilt:hilt-lifecycle-viewmodel:1.0.0-alpha02'
+    kapt 'androidx.hilt:hilt-compiler:1.0.0-alpha02'
 
 
 }

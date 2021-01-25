@@ -1,24 +1,25 @@
 package com.example.firstkotlin.viewModel
 
-import androidx.lifecycle.LiveData
-import androidx.lifecycle.MutableLiveData
-import androidx.lifecycle.ViewModel
-import androidx.lifecycle.viewModelScope
-import com.example.firstkotlin.data.db.entity.Todo
+import androidx.hilt.Assisted
+import androidx.hilt.lifecycle.ViewModelInject
+import androidx.lifecycle.*
 import com.example.firstkotlin.data.repository.TodoRepo
+import com.example.firstkotlin.model.Todo
 import kotlinx.coroutines.launch
-import javax.inject.Inject
 
-class TodoViewModel @Inject constructor(val todoRepo: TodoRepo) : ViewModel() {
+class TodoViewModel @ViewModelInject constructor(
+    val todoRepo: TodoRepo,
+    @Assisted private val savedStateHandle: SavedStateHandle
+) : ViewModel() {
 
     private val _todoMutableList = MutableLiveData<List<Todo>>()
 
 
-    val todoList: LiveData<List<Todo>>
+    val todoEntityForCacheList: LiveData<List<Todo>>
         get() = _todoMutableList
 
 
-    fun getallDetail(): LiveData<List<Todo>> {
+    fun getallDetail(): List<Todo> {
         return todoRepo.getallDetail()
     }
 

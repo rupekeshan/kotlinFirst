@@ -6,21 +6,18 @@ import android.view.View
 import android.view.ViewGroup
 import android.widget.Toast
 import androidx.fragment.app.Fragment
+import androidx.fragment.app.viewModels
 import androidx.lifecycle.Observer
-import androidx.lifecycle.ViewModelProvider
 import com.example.firstkotlin.R
-import com.example.firstkotlin.data.db.RoomDB
-import com.example.firstkotlin.data.db.entity.Todo
-import com.example.firstkotlin.data.repository.TodoRepo
+import com.example.firstkotlin.model.Todo
 import com.example.firstkotlin.viewModel.TodoViewModel
-import com.example.firstkotlin.viewModel.vmfactory.TodoVMFactory
+import dagger.hilt.android.AndroidEntryPoint
 import kotlinx.android.synthetic.main.fragment_detailed_todo.*
-import javax.inject.Inject
 
-
+@AndroidEntryPoint
 class Detailed_todo : Fragment() {
 
-    @Inject lateinit var todoViewModel: TodoViewModel
+    private val todoViewModel: TodoViewModel by viewModels()
     private var sampleData: List<Todo>? = null
 
     override fun onCreateView(
@@ -31,17 +28,10 @@ class Detailed_todo : Fragment() {
     }
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
-        todoViewModel = ViewModelProvider(
-            this,
-            TodoVMFactory(TodoRepo(
-                RoomDB(
-                    requireContext()
-                ),requireContext()
-            ))
-        ).get(TodoViewModel::class.java)
+
         val id = arguments?.getInt("id")
         context?.let { context ->
-            todoViewModel.getallDetail().observe(viewLifecycleOwner, Observer {
+            todoViewModel.todoEntityForCacheList.observe(viewLifecycleOwner, Observer {
                 sampleData = it
                 if (id != null) {
                     updateData(id)

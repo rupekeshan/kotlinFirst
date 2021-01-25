@@ -8,9 +8,10 @@ import androidx.core.os.bundleOf
 import androidx.navigation.Navigation
 import androidx.recyclerview.widget.RecyclerView
 import com.example.firstkotlin.R
-import com.example.firstkotlin.data.db.entity.Todo
+import com.example.firstkotlin.model.Todo
 import com.example.firstkotlin.viewModel.TodoViewModel
 import kotlinx.android.synthetic.main.recycle_list_holder.view.*
+
 
 class TodoRecycleAdapter(val todoViewModel: TodoViewModel) : RecyclerView.Adapter<TodoRecycleAdapter.TodoRecycleHolder>() {
 
@@ -24,14 +25,14 @@ class TodoRecycleAdapter(val todoViewModel: TodoViewModel) : RecyclerView.Adapte
     override fun onBindViewHolder(holder: TodoRecycleHolder, position: Int) {
         holder.bind(my[position])
         holder.itemView.setOnClickListener {
-            val id = my[position].id?.toInt()
+            val id = my[position].id
             val bundle = bundleOf("id" to id)
             Navigation.findNavController(holder.itemView)
                 .navigate(R.id.action_listFragment_to_detailed_todo, bundle);
         }
         holder.itemView.deleteList.setOnClickListener {
             val todo = my[position]
-            todoViewModel.deleteData(todo = todo)
+            todoViewModel.deleteData(todo)
         }
 
     }

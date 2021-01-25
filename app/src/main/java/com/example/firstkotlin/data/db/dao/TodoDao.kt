@@ -2,21 +2,21 @@ package com.example.firstkotlin.data.db.dao
 
 import androidx.lifecycle.LiveData
 import androidx.room.*
-import com.example.firstkotlin.data.db.entity.Todo
+import com.example.firstkotlin.data.db.entity.TodoEntityForCache
 
 @Dao
 interface TodoDao {
 
     @Query("SELECT * FROM todo_first")
-    fun getAllDataWithLive(): LiveData<List<Todo>>
+    fun getAllDataWithLive(): LiveData<List<TodoEntityForCache>>
 
     @Query("SELECT * FROM todo_first")
-    fun getAllData(): List<Todo>
+    fun getAllData(): List<TodoEntityForCache>
 
     @Insert(onConflict = OnConflictStrategy.IGNORE)
-    suspend fun addData(todo:Todo)
+    suspend fun addData(todoEntityForCache:TodoEntityForCache)
 
     @Delete
-    suspend fun deleteData(todo:Todo)
+    suspend fun deleteData(todoEntityForCache:TodoEntityForCache)
 
 }

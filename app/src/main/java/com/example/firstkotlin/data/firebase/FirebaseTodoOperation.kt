@@ -1,24 +1,26 @@
 package com.example.firstkotlin.data.firebase
 
 import android.util.Log
-import com.example.firstkotlin.data.db.entity.Todo
+import com.example.firstkotlin.data.db.entity.TodoEntityForCache
+import com.example.firstkotlin.util.Constant.COLLECTION_NAME
 import com.google.firebase.firestore.ktx.firestore
 import com.google.firebase.firestore.ktx.toObjects
 import com.google.firebase.ktx.Firebase
 
-class TodoFireBase {
+class FirebaseTodoOperation {
     private val TAG = "TodoFireBase"
 
 
     val fire = Firebase.firestore
-    lateinit var fireList: MutableList<Todo>
+    val collection = fire.collection(COLLECTION_NAME)
+    lateinit var fireList: MutableList<TodoEntityForCache>
 
-    private fun getAllDetail(): List<Todo>? {
-        var dat: List<Todo>? = null
-        fire.collection("todoAndroid").get()
+    private fun getAllDetail(): List<TodoEntityForCache>? {
+        var dat: List<TodoEntityForCache>? = null
+        collection.get()
             .addOnSuccessListener {
                 Log.e(TAG, "getAllDetail: ${it.documents[0].data}")
-                dat = it.toObjects<Todo>()
+                dat = it.toObjects<TodoEntityForCache>()
                 Log.e(TAG, "getAllDetail: $dat")
 
             }
@@ -29,19 +31,18 @@ class TodoFireBase {
         return dat
     }
 
-    fun sync(todoDBList: List<Todo>) {
-        if (todoDBList == getAllDetail()) {
+    fun sync(todoEntityForDBDBList: List<TodoEntityForCache>) {
+        if (todoEntityForDBDBList == getAllDetail()) {
             Log.e(TAG, "sync: working")
         }
-        todoDBList.forEach {
+        todoEntityForDBDBList.forEach {
             addData(it)
         }
 
     }
 
-    private fun addData(todo: Todo) {
-        fire.collection("todoAndroid")
-            .add(todo)
+    private fun addData(todoEntityForCache: TodoEntityForCache) {
+        collection.add(todoEntityForCache)
             .addOnCompleteListener {
                 Log.e(TAG, "addData: success")
             }
