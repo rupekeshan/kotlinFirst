@@ -1,54 +1,49 @@
 package com.example.firstkotlin.data.firebase
 
 import android.util.Log
-import com.example.firstkotlin.data.db.entity.TodoEntityForCache
+import com.example.firstkotlin.data.firebase.entity.TodoEntityForFB
 import com.example.firstkotlin.util.Constant.COLLECTION_NAME
 import com.google.firebase.firestore.ktx.firestore
-import com.google.firebase.firestore.ktx.toObjects
 import com.google.firebase.ktx.Firebase
+import kotlinx.coroutines.tasks.await
 
 class FirebaseTodoOperation {
     private val TAG = "TodoFireBase"
 
 
-    val fire = Firebase.firestore
-    val collection = fire.collection(COLLECTION_NAME)
-    lateinit var fireList: MutableList<TodoEntityForCache>
+    private val fire = Firebase.firestore
+    private val collection = fire.collection(COLLECTION_NAME)
+//    lateinit var fireList: MutableList<TodoEntityForFB>
 
-    private fun getAllDetail(): List<TodoEntityForCache>? {
-        var dat: List<TodoEntityForCache>? = null
-        collection.get()
-            .addOnSuccessListener {
-                Log.e(TAG, "getAllDetail: ${it.documents[0].data}")
-                dat = it.toObjects<TodoEntityForCache>()
-                Log.e(TAG, "getAllDetail: $dat")
+    suspend fun getAllDetail(): List<TodoEntityForFB>? {
+        Log.e(TAG, "getAllDetail: Started" )
 
-            }
-            .addOnFailureListener {
-                Log.e(TAG, "getAllDetail:", it)
-            }
-
-        return dat
-    }
-
-    fun sync(todoEntityForDBDBList: List<TodoEntityForCache>) {
-        if (todoEntityForDBDBList == getAllDetail()) {
-            Log.e(TAG, "sync: working")
+        return try {
+            Log.e(TAG, "getAllDetail: start fetching data" )
+            collection.get().await().toObjects(TodoEntityForFB::class.java)
         }
-        todoEntityForDBDBList.forEach {
-            addData(it)
+        catch (e:Exception){
+            Log.e(TAG, "getAllDetail: sorry",e )
+            null
         }
 
     }
 
-    private fun addData(todoEntityForCache: TodoEntityForCache) {
-        collection.add(todoEntityForCache)
+
+    private fun addData(todoEntityForFB: TodoEntityForFB) {
+        collection.add(todoEntityForFB)
             .addOnCompleteListener {
                 Log.e(TAG, "addData: success")
             }
             .addOnFailureListener {
                 Log.e(TAG, "addData: Failed", it)
             }
+    }
+
+    fun addListofData(todoEntityForFBList: List<TodoEntityForFB>) {
+        todoEntityForFBList.forEach {
+            addData(it)
+        }
     }
 
 

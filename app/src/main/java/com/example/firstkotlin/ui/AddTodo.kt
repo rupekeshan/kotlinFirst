@@ -3,6 +3,7 @@ package com.example.firstkotlin.ui
 import android.app.Activity
 import android.content.Context
 import android.os.Bundle
+import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
@@ -14,19 +15,25 @@ import androidx.activity.OnBackPressedCallback
 import androidx.fragment.app.DialogFragment
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.viewModels
+import androidx.lifecycle.Observer
 import androidx.navigation.Navigation
 import com.example.firstkotlin.R
+import com.example.firstkotlin.databinding.AddTodoFragmentBinding
 import com.example.firstkotlin.model.Todo
+import com.example.firstkotlin.util.DataState
+import com.example.firstkotlin.util.Operations
 import com.example.firstkotlin.viewModel.TodoViewModel
 import dagger.hilt.android.AndroidEntryPoint
-import kotlinx.android.synthetic.main.add_todo_fragment.*
 
 @AndroidEntryPoint
-class Add_todo : DialogFragment() {
+class AddTodo : DialogFragment() {
 
-    private lateinit var text_header: EditText;
-    private lateinit var text_desc: EditText;
+    private lateinit var textHeader: EditText
+    private lateinit var textDesc: EditText
     private val todoViewModel: TodoViewModel by viewModels()
+
+    private lateinit var binding: AddTodoFragmentBinding
+
 
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?,
@@ -36,16 +43,19 @@ class Add_todo : DialogFragment() {
     }
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
-        text_header = textHeader
-        text_desc = textDescription
-        saveButton.setOnClickListener {
-            if (validateInput(text_header.text.toString(), text_desc.text.toString())) {
+
+        binding = AddTodoFragmentBinding.bind(view)
+        binding.showProgress.visibility = View.GONE
+        textHeader = binding.textHeader
+        textDesc = binding.textDescription
+        binding.saveButton.setOnClickListener {
+            if (validateInput(textHeader.text.toString(), textDesc.text.toString())) {
                 submitData()
             }
             hideKeyboard()
         }
 
-        text_desc.setOnEditorActionListener { v, actionId, event ->
+        textDesc.setOnEditorActionListener { v, actionId, event ->
             val handle: Boolean = false
             if (actionId == EditorInfo.IME_ACTION_DONE) {
                 submitData()
@@ -73,9 +83,27 @@ class Add_todo : DialogFragment() {
 
 
     private fun submitData() {
-        val todo = Todo(text_header.text.toString(), text_desc.text.toString())
-        context?.let { todoViewModel.addTodo(todo) }
-        dialog?.dismiss()
+        val todo = Todo(textHeader.text.toString(), textDesc.text.toString())
+        val job = todoViewModel.makeDataOperation(todo,Operations.ADD)
+        job.observe(viewLifecycleOwner, Observer {
+
+            Log.e("TAG", "submitData: $it")
+            when (it) {
+                is DataState.Success -> {
+                    if (it.data == "close") {
+                        binding.showProgress.visibility = View.GONE
+                        dialog?.dismiss()
+                    }
+                }
+                is DataState.Loading -> {
+                    binding.showProgress.visibility = View.VISIBLE
+                }
+                else -> {
+                    Toast.makeText(context, "Something Worng", Toast.LENGTH_SHORT).show()
+                }
+            }
+        })
+
     }
 
     fun Fragment.hideKeyboard() {

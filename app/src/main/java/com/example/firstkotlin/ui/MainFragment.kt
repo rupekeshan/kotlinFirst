@@ -4,19 +4,17 @@ import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
-import android.widget.Button
 import androidx.fragment.app.Fragment
 import androidx.navigation.NavController
 import androidx.navigation.Navigation
 import com.example.firstkotlin.R
-import kotlinx.android.synthetic.main.fragment_main.*
+import com.example.firstkotlin.databinding.FragmentMainBinding
 
 class MainFragment : Fragment() {
 
     private val TAG = "MainFragment"
-    private lateinit var button: Button
     private lateinit var navController: NavController
-
+    private lateinit var binding: FragmentMainBinding
 
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?,
@@ -26,10 +24,9 @@ class MainFragment : Fragment() {
     }
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
-
+        binding = FragmentMainBinding.bind(view)
         navController = Navigation.findNavController(view)
-        button = startButton
-        button.setOnClickListener {
+        binding.startButton.setOnClickListener {
             navController.navigate(R.id.action_mainFragment_to_listFragment)
         }
         setHasOptionsMenu(true)

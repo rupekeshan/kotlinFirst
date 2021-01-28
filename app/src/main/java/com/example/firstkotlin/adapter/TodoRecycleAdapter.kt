@@ -1,24 +1,33 @@
 package com.example.firstkotlin.adapter
 
+import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import android.widget.TextView
 import androidx.core.os.bundleOf
+import androidx.lifecycle.LifecycleOwner
+import androidx.lifecycle.Observer
 import androidx.navigation.Navigation
 import androidx.recyclerview.widget.RecyclerView
 import com.example.firstkotlin.R
+import com.example.firstkotlin.databinding.RecycleListHolderBinding
 import com.example.firstkotlin.model.Todo
+import com.example.firstkotlin.util.DataState
+import com.example.firstkotlin.util.Operations
 import com.example.firstkotlin.viewModel.TodoViewModel
-import kotlinx.android.synthetic.main.recycle_list_holder.view.*
 
 
-class TodoRecycleAdapter(val todoViewModel: TodoViewModel) : RecyclerView.Adapter<TodoRecycleAdapter.TodoRecycleHolder>() {
+class TodoRecycleAdapter(
+    private val todoViewModel: TodoViewModel,
+    val viewLifecycleOwner: LifecycleOwner
+) :
+    RecyclerView.Adapter<TodoRecycleAdapter.TodoRecycleHolder>() {
 
     private var my: List<Todo> = arrayListOf()
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): TodoRecycleHolder {
         return TodoRecycleHolder(
-            LayoutInflater.from(parent.context).inflate(R.layout.recycle_list_holder, parent, false)
+            RecycleListHolderBinding.inflate(LayoutInflater.from(parent.context), parent, false)
         )
     }
 
@@ -30,9 +39,25 @@ class TodoRecycleAdapter(val todoViewModel: TodoViewModel) : RecyclerView.Adapte
             Navigation.findNavController(holder.itemView)
                 .navigate(R.id.action_listFragment_to_detailed_todo, bundle);
         }
-        holder.itemView.deleteList.setOnClickListener {
+        holder.binding.deleteList.setOnClickListener {
             val todo = my[position]
-            todoViewModel.deleteData(todo)
+            todoViewModel.makeDataOperation(todo, Operations.DELETE).observe(viewLifecycleOwner,
+                Observer {
+                    Log.e("TAG", "submitData: $it")
+                    when (it) {
+                        is DataState.Success -> {
+                            if (it.data == "close") {
+                                holder.binding.progressBarForList.visibility = View.GONE
+                            }
+                        }
+                        is DataState.Loading -> {
+                            holder.binding.progressBarForList.visibility = View.VISIBLE
+                        }
+                        else -> {
+                        }
+                    }
+                })
+
         }
 
     }
@@ -46,9 +71,12 @@ class TodoRecycleAdapter(val todoViewModel: TodoViewModel) : RecyclerView.Adapte
         notifyDataSetChanged()
     }
 
-    class TodoRecycleHolder(itemView: View) : RecyclerView.ViewHolder(itemView) {
-        private var headerText: TextView = itemView.header_todo
-        private var descText: TextView = itemView.des_todo
+    class TodoRecycleHolder(val binding: RecycleListHolderBinding) :
+        RecyclerView.ViewHolder(binding.root) {
+
+
+        private var headerText: TextView = binding.headerTodo
+        private var descText: TextView = binding.desTodo
 
 
         fun bind(list: Todo) {

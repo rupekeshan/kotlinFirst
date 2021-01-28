@@ -26,4 +26,10 @@ class NetworkEntityMapper @Inject constructor() : EntityMapper<TodoEntityForFB, 
         return entities.map { mapFromEntity(it) }
     }
 
+    fun mapToListEntity(enitites: List<Todo>): List<TodoEntityForFB> {
+        return enitites.map {
+            mapToEntity(it)
+        }
+    }
+
 }

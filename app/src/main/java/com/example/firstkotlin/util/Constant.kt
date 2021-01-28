@@ -8,3 +8,7 @@ object Constant {
 
 
 }
+enum class Operations{
+    ADD,
+    DELETE
+}

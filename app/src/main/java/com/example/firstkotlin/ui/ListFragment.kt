@@ -10,15 +10,16 @@ import androidx.lifecycle.Observer
 import androidx.recyclerview.widget.LinearLayoutManager
 import com.example.firstkotlin.R
 import com.example.firstkotlin.adapter.TodoRecycleAdapter
+import com.example.firstkotlin.databinding.FragmentListBinding
 import com.example.firstkotlin.viewModel.TodoViewModel
 import dagger.hilt.android.AndroidEntryPoint
-import kotlinx.android.synthetic.main.fragment_list.*
 
 @AndroidEntryPoint
 class ListFragment : Fragment() {
 
     lateinit var recycleAdap: TodoRecycleAdapter
     private val todoViewModel: TodoViewModel by viewModels()
+    private lateinit var binding: FragmentListBinding
 
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?,
@@ -30,8 +31,8 @@ class ListFragment : Fragment() {
 
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
-
-        recycleAdap = TodoRecycleAdapter(todoViewModel)
+        binding = FragmentListBinding.bind(view)
+        recycleAdap = TodoRecycleAdapter(todoViewModel,viewLifecycleOwner)
         context?.let {
             todoViewModel.todoEntityForCacheList.observe(viewLifecycleOwner, Observer {
                 it?.let {
@@ -39,7 +40,7 @@ class ListFragment : Fragment() {
                 }
             })
         }
-        listRecycle.apply {
+        binding.listRecycle.apply {
             layoutManager = LinearLayoutManager(activity)
             adapter = recycleAdap
         }
