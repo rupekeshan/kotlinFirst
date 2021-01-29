@@ -5,5 +5,6 @@
     <color name="colorSecondary">#D32F2F</color>
     <color name="black">#000000</color>
     <color name="white">#E0E0CE</color>
+    <color name="disable">#686868</color>
 
 </resources>

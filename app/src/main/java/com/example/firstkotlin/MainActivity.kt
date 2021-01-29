@@ -3,11 +3,8 @@ package com.example.firstkotlin
 import android.os.Bundle
 import android.util.Log
 import android.view.Menu
-import android.view.MenuItem
 import androidx.appcompat.app.ActionBar
 import androidx.appcompat.app.AppCompatActivity
-import androidx.appcompat.widget.Toolbar
-import androidx.navigation.NavController
 import com.example.firstkotlin.databinding.ActivityMainBinding
 import com.example.firstkotlin.ui.AddTodo
 import dagger.hilt.android.AndroidEntryPoint
@@ -15,8 +12,6 @@ import dagger.hilt.android.AndroidEntryPoint
 @AndroidEntryPoint
 class MainActivity : AppCompatActivity() {
     private val TAG = "MainActivity"
-    private lateinit var navController: NavController
-    private lateinit var toolBar: Toolbar
     private lateinit var binding: ActivityMainBinding
 
 
@@ -52,16 +47,6 @@ class MainActivity : AppCompatActivity() {
     override fun onBackPressed() {
         Log.e(TAG, "onBackPressed: ${supportFragmentManager.backStackEntryCount}")
         super.onBackPressed()
-    }
-
-
-    override fun onOptionsItemSelected(item: MenuItem): Boolean {
-//        when (item.itemId) {
-//            R.id.add_todo -> {
-////                Navigation.findNavController(this,R.id.navHost_fragment).navigate(R.id.add_todo)
-//            }
-//        }
-        return super.onOptionsItemSelected(item)
     }
 
 

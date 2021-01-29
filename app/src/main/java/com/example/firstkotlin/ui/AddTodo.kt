@@ -3,6 +3,8 @@ package com.example.firstkotlin.ui
 import android.app.Activity
 import android.content.Context
 import android.os.Bundle
+import android.text.Editable
+import android.text.TextWatcher
 import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
@@ -34,6 +36,14 @@ class AddTodo : DialogFragment() {
 
     private lateinit var binding: AddTodoFragmentBinding
 
+    override fun onCreate(savedInstanceState: Bundle?) {
+        super.onCreate(savedInstanceState)
+        activity?.onBackPressedDispatcher?.addCallback(this, object : OnBackPressedCallback(true) {
+            override fun handleOnBackPressed() {
+                view?.let { Navigation.findNavController(it).navigateUp() }
+            }
+        })
+    }
 
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?,
@@ -42,19 +52,23 @@ class AddTodo : DialogFragment() {
         return inflater.inflate(R.layout.add_todo_fragment, container, false)
     }
 
+
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
 
         binding = AddTodoFragmentBinding.bind(view)
         binding.showProgress.visibility = View.GONE
         textHeader = binding.textHeader
         textDesc = binding.textDescription
+        binding.saveButton.isEnabled = false
         binding.saveButton.setOnClickListener {
             if (validateInput(textHeader.text.toString(), textDesc.text.toString())) {
+                disableInput()
                 submitData()
             }
             hideKeyboard()
         }
-
+        textHeader.addTextChangedListener(myTextWatcher)
+        textDesc.addTextChangedListener(myTextWatcher)
         textDesc.setOnEditorActionListener { v, actionId, event ->
             val handle: Boolean = false
             if (actionId == EditorInfo.IME_ACTION_DONE) {
@@ -64,13 +78,29 @@ class AddTodo : DialogFragment() {
         }
     }
 
-    override fun onCreate(savedInstanceState: Bundle?) {
-        super.onCreate(savedInstanceState)
-        activity?.onBackPressedDispatcher?.addCallback(this, object : OnBackPressedCallback(true) {
-            override fun handleOnBackPressed() {
-                view?.let { Navigation.findNavController(it).navigateUp() }
-            }
-        })
+    private val myTextWatcher = object : TextWatcher {
+        override fun afterTextChanged(s: Editable?) {
+
+        }
+
+        override fun beforeTextChanged(s: CharSequence?, start: Int, count: Int, after: Int) {
+
+        }
+
+        override fun onTextChanged(s: CharSequence?, start: Int, before: Int, count: Int) {
+            val header: String = textHeader.text.toString().trim()
+            val desc: String = textDesc.text.toString().trim()
+            Log.e("TAG", "onTextChanged: $header $desc")
+            binding.saveButton.isEnabled = !(header.isEmpty() || desc.isEmpty())
+        }
+
+
+    }
+
+    private fun disableInput() {
+        textHeader.isEnabled = false
+        textDesc.isEnabled = false
+        binding.saveButton.isEnabled = false
     }
 
     private fun validateInput(textHeader: String, textDesc: String): Boolean {
@@ -81,10 +111,9 @@ class AddTodo : DialogFragment() {
         return true
     }
 
-
     private fun submitData() {
         val todo = Todo(textHeader.text.toString(), textDesc.text.toString())
-        val job = todoViewModel.makeDataOperation(todo,Operations.ADD)
+        val job = todoViewModel.makeDataOperation(todo, Operations.ADD)
         job.observe(viewLifecycleOwner, Observer {
 
             Log.e("TAG", "submitData: $it")
@@ -121,3 +150,4 @@ class AddTodo : DialogFragment() {
     }
 
 }
+
